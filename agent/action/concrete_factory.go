@@ -9,6 +9,7 @@ import (
 	boshjobsuper "github.com/cloudfoundry/bosh-agent/jobsupervisor"
 	boshnotif "github.com/cloudfoundry/bosh-agent/notification"
 	boshplatform "github.com/cloudfoundry/bosh-agent/platform"
+	bosharp "github.com/cloudfoundry/bosh-agent/platform/net/arp"
 	boshntp "github.com/cloudfoundry/bosh-agent/platform/ntp"
 	boshsettings "github.com/cloudfoundry/bosh-agent/settings"
 	boshblob "github.com/cloudfoundry/bosh-utils/blobstore"
@@ -34,6 +35,7 @@ func NewFactory(
 	jobScriptProvider boshscript.JobScriptProvider,
 	scriptCommandFactory boshsys.ScriptCommandFactory,
 	logger boshlog.Logger,
+	arp bosharp.ArpManager,
 ) (factory Factory) {
 	compressor := platform.GetCompressor()
 	copier := platform.GetCopier()
@@ -73,6 +75,9 @@ func NewFactory(
 			"migrate_disk": NewMigrateDisk(platform, dirProvider),
 			"mount_disk":   NewMountDisk(settingsService, platform, dirProvider, logger),
 			"unmount_disk": NewUnmountDisk(settingsService, platform),
+
+			// ARP cache management
+			"delete_from_arp": NewForcefulARP(arp),
 
 			// Networkingconcrete_factory_test.go
 			"prepare_network_change":     NewPrepareNetworkChange(platform.GetFs(), settingsService, NewAgentKiller()),
