@@ -35,7 +35,7 @@ func NewFactory(
 	jobScriptProvider boshscript.JobScriptProvider,
 	scriptCommandFactory boshsys.ScriptCommandFactory,
 	logger boshlog.Logger,
-	arp bosharp.ArpManager,
+	arp bosharp.Manager,
 ) (factory Factory) {
 	compressor := platform.GetCompressor()
 	copier := platform.GetCopier()
